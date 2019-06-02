@@ -79,7 +79,7 @@ port_receive = 61000
 # Key is first 8 bytes only
 tddp_key = hashlib.md5(username + password).hexdigest()[:16]
 if args.verbose:
-	print "TDDP Key:\t", tddp_key, "(" + username + password + ")"
+	print("TDDP Key:\t", tddp_key, "(" + username + password + ")")
 
 ##  TDDP Header
 #    0                   1                   2                   3
@@ -198,21 +198,21 @@ sock_receive.bind(('', port_receive))
 sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 sock_send.sendto(binascii.unhexlify(tddp_packet), (ip, port_send))
 if args.verbose:
-	print "Raw Request:\t", tddp_packet
+	print("Raw Request:\t", tddp_packet)
 t = tddp_packet
-print "Request Data:\tVersion", t[0:2], "Type", t[2:4], "Status", t[6:8], "Length", t[8:16], "ID", t[16:20], "Subtype", t[20:22]
+print("Request Data:\tVersion", t[0:2], "Type", t[2:4], "Status", t[6:8], "Length", t[8:16], "ID", t[16:20], "Subtype", t[20:22])
 sock_send.close()
 
 # Receive the reply
 response, addr = sock_receive.recvfrom(1024)
 r = response.encode('hex')
 if args.verbose:
-	print "Raw Reply:\t", r
+	print("Raw Reply:\t", r)
 sock_receive.close()
-print "Reply Data:\tVersion", r[0:2], "Type", r[2:4], "Status", r[6:8], "Length", r[8:16], "ID", r[16:20], "Subtype", r[20:22]
+print("Reply Data:\tVersion", r[0:2], "Type", r[2:4], "Status", r[6:8], "Length", r[8:16], "ID", r[16:20], "Subtype", r[20:22])
 
 # Take payload and decrypt using key
 recv_data = r[56:]
 if recv_data:
-	print "Decrypted:\t" + key.decrypt(binascii.unhexlify(recv_data))
+	print("Decrypted:\t" + key.decrypt(binascii.unhexlify(recv_data)))
 
